@@ -34,7 +34,7 @@ class LowestPriceFilterTest extends ServiceTestCase
             ->setVoucherCode('OU812')
             ->setRequestDate('2023-04-01');
 
-        yield 'sale_fixed'=> [$enquiry,200];
+        yield 'sale_fixed'=> [$enquiry,100*2];
 
 
         $enquiry = new LowestPriceEnquiry();
@@ -43,7 +43,7 @@ class LowestPriceFilterTest extends ServiceTestCase
             ->setVoucherCode('OU812')
             ->setRequestDate('2023-11-25');
 
-        yield 'half_price_sale'=>[$enquiry,250];
+        yield 'half_price_sale'=>[$enquiry,(100*5)/2];
 
 
         $enquiry = new LowestPriceEnquiry();
