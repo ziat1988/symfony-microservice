@@ -2,7 +2,7 @@
 
 namespace App\Tests\unit;
 
-use App\Filter\LowestPriceFilter;
+use App\FilterPrice\LowestPriceFilter;
 use App\Tests\ServiceTestCase;
 
 class LowestPriceFilterTest extends ServiceTestCase

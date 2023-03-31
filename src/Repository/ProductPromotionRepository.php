@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Product;
 use App\Entity\ProductPromotion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,6 +21,22 @@ class ProductPromotionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, ProductPromotion::class);
     }
+
+    public function getPromotionByProduct(Product $product)
+    {
+        $qb = $this->createQueryBuilder('pp')
+            ->select('promotion')
+//            ->addSelect('promotion.adjustment')
+//            ->addSelect('promotion.type')
+            ->leftJoin('pp.promotion','promotion')
+            ->where('pp.product = :product')
+            ->setParameter('product',$product)
+        ;
+
+        return $qb->getQuery()->getResult();
+
+    }
+
 
     public function save(ProductPromotion $entity, bool $flush = false): void
     {
