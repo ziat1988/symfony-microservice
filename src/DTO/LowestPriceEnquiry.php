@@ -2,20 +2,42 @@
 
 namespace App\DTO;
 
+use App\Entity\Product;
 use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 class LowestPriceEnquiry
 {
+
+    private ?Product $product;
+
     private ?int $quantity = 1;
     private ?string $requestLocation;
     private ?string $voucherCode;
     private ?string $requestDate;
-    private ?float $price;
-    private ?float $discountedPrice;
+    private ?float $originalPrice;
+    private ?float $discountedPrice =null;
     private ?int $promotionId;
     private ?string $promotionName;
 
+    /**
+     * @return Product|null
+     */
+    public function getProduct(): ?Product
+    {
+        return $this->product;
+    }
+
+    /**
+     * @param Product|null $product
+     * @return LowestPriceEnquiry
+     */
+    public function setProduct(?Product $product): LowestPriceEnquiry
+    {
+        $this->product = $product;
+        return $this;
+    }
 
     /**
      * @return int|null
@@ -92,18 +114,18 @@ class LowestPriceEnquiry
     /**
      * @return float|null
      */
-    public function getPrice(): ?float
+    public function getOriginalPrice(): ?float
     {
-        return $this->price;
+        return $this->originalPrice;
     }
 
     /**
-     * @param float|null $price
+     * @param float|null $originalPrice
      * @return LowestPriceEnquiry
      */
-    public function setPrice(?float $price): LowestPriceEnquiry
+    public function setOriginalPrice(?float $originalPrice): LowestPriceEnquiry
     {
-        $this->price = $price;
+        $this->originalPrice = $originalPrice;
         return $this;
     }
 
@@ -124,25 +146,6 @@ class LowestPriceEnquiry
         $this->discountedPrice = $discountedPrice;
         return $this;
     }
-
-    /**
-     * @return float|null
-     */
-    public function getFinalTotalPrice(): ?float
-    {
-        return $this->finalTotalPrice;
-    }
-
-    /**
-     * @param float|null $finalTotalPrice
-     * @return LowestPriceEnquiry
-     */
-    public function setFinalTotalPrice(?float $finalTotalPrice): LowestPriceEnquiry
-    {
-        $this->finalTotalPrice = $finalTotalPrice;
-        return $this;
-    }
-    private ?float $finalTotalPrice;
 
     /**
      * @return int|null

@@ -16,21 +16,24 @@ class LowestPriceFilter
      */
     public function apply(LowestPriceEnquiry $lowestPriceEnquiry, array $promotions): LowestPriceEnquiry
     {
-        // loop every promotion on object
-        $priceTotal = $lowestPriceEnquiry->getPrice() * $lowestPriceEnquiry->getQuantity();
+        $product = $lowestPriceEnquiry->getProduct();
+        $priceOriginal = $product->getPrice();
+        $priceTotal = $priceOriginal * $lowestPriceEnquiry->getQuantity();
 
+        $lowestPriceEnquiry->setOriginalPrice(floatval($priceOriginal));
         foreach ($promotions as $promo){
             $priceByPromo = PromotionFactory::createPromotion($promo->getType());
             $priceAfterPromo = $priceByPromo->calculate($lowestPriceEnquiry,$promo);
 
             if($priceAfterPromo <  $priceTotal){
-                $priceTotal = $priceAfterPromo;
                 $lowestPriceEnquiry->setPromotionName($promo->getName());
                 $lowestPriceEnquiry->setPromotionId($promo->getId());
+                $lowestPriceEnquiry->setDiscountedPrice($priceAfterPromo);
+
+                $priceTotal = $priceAfterPromo;
             }
 
         }
-        $lowestPriceEnquiry->setFinalTotalPrice($priceTotal);
 
         return $lowestPriceEnquiry;
 

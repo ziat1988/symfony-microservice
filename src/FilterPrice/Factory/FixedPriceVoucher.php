@@ -12,10 +12,11 @@ class FixedPriceVoucher implements PromotionVariantInterface
     {
         // maybe need to store different way than json
         $codeCriteria = $promotion->getCriteria();
+        $product = $lowestPriceEnquiry->getProduct();
         if($lowestPriceEnquiry->getVoucherCode() === $codeCriteria['code']){ // can be issu array key
             return $promotion->getAdjustment() * $lowestPriceEnquiry->getQuantity();
 
         }
-        return $lowestPriceEnquiry->getPrice() * $lowestPriceEnquiry->getQuantity();
+        return $product->getPrice() * $lowestPriceEnquiry->getQuantity();
     }
 }

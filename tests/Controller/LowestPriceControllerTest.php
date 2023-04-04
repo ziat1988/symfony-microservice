@@ -17,14 +17,11 @@ class LowestPriceControllerTest extends WebTestCase
                 'requestLocation'=>'FR',
                 'voucherCode'=> 'OU812',
                 'requestDate'=>'2023-11-25',
-                'price'=>120
-                //'product_id'=>$id
-
             ]
         );
 
 
         $this->assertResponseIsSuccessful();
-       // $this->assertSelectorTextContains('h1', 'Hello World');
+
     }
 }

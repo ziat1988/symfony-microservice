@@ -3,6 +3,7 @@
 namespace App\Tests\unit;
 
 use App\DTO\LowestPriceEnquiry;
+use App\Entity\Product;
 use App\Entity\Promotion;
 use App\FilterPrice\LowestPriceFilter;
 use App\Tests\ServiceTestCase;
@@ -12,7 +13,7 @@ class LowestPriceFilterTest extends ServiceTestCase
     /**
      * @dataProvider provideJsonData
      */
-    public function testLowestPriceAppliedCorrect(LowestPriceEnquiry $enquiry, float $priceFinalExpected): void
+    public function testLowestPriceAppliedCorrect(LowestPriceEnquiry $enquiry, Product $product, float|null $priceDiscount): void
     {
 
         /** @var LowestPriceFilter $lowestPriceFilterService */
@@ -20,39 +21,45 @@ class LowestPriceFilterTest extends ServiceTestCase
         $promotions = $this->providePromotions();
 
 
-        $priceFiltered = $lowestPriceFilterService->apply($enquiry,$promotions);
-        self::assertSame($priceFiltered->getFinalTotalPrice(),$priceFinalExpected);
+        $priceFiltered = $lowestPriceFilterService->apply($enquiry,$promotions); // nope
+
+        self::assertSame($priceFiltered->getDiscountedPrice(),$priceDiscount);
+        self::assertSame($priceFiltered->getOriginalPrice(),floatval($product->getPrice()));
 
     }
 
     public function provideJsonData(): \Generator
     {
 
+        $product = new Product();
+        $product->setPrice(122.5);
         $enquiry = new LowestPriceEnquiry();
-        $enquiry->setPrice(122.5)
+        $enquiry->setProduct($product)
             ->setQuantity(2)
             ->setVoucherCode('OU812')
             ->setRequestDate('2023-04-01');
 
-        yield 'sale_fixed'=> [$enquiry,100*2];
+        yield 'sale_fixed'=> [$enquiry,$product,100*2];
 
-
+        $product = new Product();
+        $product->setPrice(100);
         $enquiry = new LowestPriceEnquiry();
-        $enquiry->setPrice(100)
+        $enquiry->setProduct($product)
             ->setQuantity(5)
             ->setVoucherCode('OU812')
             ->setRequestDate('2023-11-25');
 
-        yield 'half_price_sale'=>[$enquiry,(100*5)/2];
+        yield 'half_price_sale'=>[$enquiry,$product,(100*5)/2];
 
-
+        $product = new Product();
+        $product->setPrice(99);
         $enquiry = new LowestPriceEnquiry();
-        $enquiry->setPrice(99)
+        $enquiry->setProduct($product)
             ->setQuantity(5)
             ->setVoucherCode('OU812x')
             ->setRequestDate('2023-11-24');
 
-        yield 'no_promotion'=>[$enquiry,99*5];
+        yield 'no_promotion'=>[$enquiry,$product,null];
     }
 
     private function providePromotions(): array

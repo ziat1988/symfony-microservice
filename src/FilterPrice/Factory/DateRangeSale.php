@@ -23,10 +23,11 @@ class DateRangeSale implements PromotionVariantInterface
 
         $requestDate = new \DateTimeImmutable($lowestPriceEnquiry->getRequestDate());
 
+        $product = $lowestPriceEnquiry->getProduct();
         if($requestDate >= $from && $requestDate <= $to ){
-            return $lowestPriceEnquiry->getPrice() * $lowestPriceEnquiry->getQuantity() * $promotion->getAdjustment();
+            return $product->getPrice() * $lowestPriceEnquiry->getQuantity() * $promotion->getAdjustment();
         }
 
-        return $lowestPriceEnquiry->getPrice() * $lowestPriceEnquiry->getQuantity();
+        return $product->getPrice() * $lowestPriceEnquiry->getQuantity();
     }
 }
