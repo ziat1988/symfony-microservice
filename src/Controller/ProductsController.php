@@ -2,11 +2,12 @@
 
 namespace App\Controller;
 
+use App\Cache\PromotionByProductCache;
 use App\DTO\LowestPriceEnquiry;
 use App\FilterPrice\LowestPriceFilter;
 use App\Repository\ProductRepository;
-use App\Repository\PromotionRepository;
 use Exception;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,13 +26,14 @@ class ProductsController extends AbstractController
 
     public function __construct(
         private readonly ProductRepository $productRepository,
-        private readonly PromotionRepository $promotionRepository,
-        private readonly LowestPriceFilter $lowestPriceFilter
+        private readonly LowestPriceFilter $lowestPriceFilter,
+        private readonly PromotionByProductCache $cachePromotion
     ){}
 
 
     /**
      * @throws Exception
+     * @throws InvalidArgumentException
      */
     #[Route('/products/{id}/lowest-price', name: 'products_lowest_price', methods: "POST")]
     public function lowestPrice(Request $request,int $id): JsonResponse
@@ -57,7 +59,8 @@ class ProductsController extends AbstractController
 
         $lowestPriceEnquiry->setProduct($product); //TODO: maybe let deserialize do his job?
 
-        $promotions = $this->promotionRepository->getPromotionByProduct($product);
+        $promotions = $this->cachePromotion->findPromotionForProduct($product);
+       // $promotions = $this->promotionRepository->getPromotionByProduct($product);
 
         $modifiedEnquiry = $this->lowestPriceFilter->apply($lowestPriceEnquiry,$promotions);
 
