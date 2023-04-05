@@ -17,13 +17,14 @@ class LowestPriceFilter
     public function apply(LowestPriceEnquiry $lowestPriceEnquiry, array $promotions): LowestPriceEnquiry
     {
         $product = $lowestPriceEnquiry->getProduct();
-        $priceOriginal = $product->getPrice();
-        $priceTotal = $priceOriginal * $lowestPriceEnquiry->getQuantity();
+        $priceOriginal = floatval($product->getPrice());
+        $quantity = $lowestPriceEnquiry->getQuantity();
+        $priceTotal = $priceOriginal * $quantity;
 
-        $lowestPriceEnquiry->setOriginalPrice(floatval($priceOriginal));
+        $lowestPriceEnquiry->setOriginalPrice($priceOriginal);
         foreach ($promotions as $promo){
             $priceByPromo = PromotionFactory::createPromotion($promo->getType());
-            $priceAfterPromo = $priceByPromo->calculate($lowestPriceEnquiry,$promo);
+            $priceAfterPromo = $priceByPromo->calculate($lowestPriceEnquiry,$promo,$quantity,$priceOriginal);
 
             if($priceAfterPromo <  $priceTotal){
                 $lowestPriceEnquiry->setPromotionName($promo->getName());
