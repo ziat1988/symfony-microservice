@@ -1,11 +1,7 @@
 <?php
 
 namespace App\DTO;
-
 use App\Entity\Product;
-use Symfony\Component\Serializer\Annotation\Context;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Symfony\Component\Serializer\Annotation\Ignore;
 
 class LowestPriceEnquiry
 {
