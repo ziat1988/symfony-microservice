@@ -60,7 +60,6 @@ class ProductsController extends AbstractController
         $lowestPriceEnquiry->setProduct($product); //TODO: maybe let deserialize do his job?
 
         $promotions = $this->cachePromotion->findPromotionForProduct($product);
-       // $promotions = $this->promotionRepository->getPromotionByProduct($product);
 
         $modifiedEnquiry = $this->lowestPriceFilter->apply($lowestPriceEnquiry,$promotions);
 
@@ -80,7 +79,5 @@ class ProductsController extends AbstractController
         ]);
 
     }
-
-
 
 }

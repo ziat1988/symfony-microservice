@@ -2,7 +2,19 @@
 
 ## Symfony Docker with Microservice
 - Base on [Gary tuto](https://www.youtube.com/watch?v=pZv93AEJhS8&list=PLQH1-k79HB39Coin4J75MC4aLXR7WsORM&ab_channel=GaryClarke) project for promotion engine price.
+- Reference redis [Yohan](https://www.youtube.com/watch?v=diwQMw9odvA&t=1500s)
 
+### Redis for caching
+- Use docker for redis
+- redis-commander for UI : http://127.0.0.1:8081
+- acces container redis, 
+  + check connection: `redis-cli`
+  + check session real time, number session open : redis-cli --stat  
+- Install phpredis  (predis)
+`composer require predis/predis`
+- Check extension php-redis extension in php, modify Dockerfile & docker-compose.yml
+- Make sur REDIS_URL in .env is: `REDIS_URL="redis://redis:6379"` because we connect php service container 
+to redis container.
 
 
 ## Getting Started

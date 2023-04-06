@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 namespace App\Cache;
-
 use App\Entity\Product;
 use App\Entity\Promotion;
 use App\Repository\PromotionRepository;
@@ -23,10 +22,9 @@ readonly class PromotionByProductCache
     public function findPromotionForProduct(Product $product) : ?array
     {
         $key = sprintf("promotion-by-product-%d",$product->getId());
-
         return $this->cache->get($key,function (ItemInterface $item)  use ($product){
-            var_dump('go here');
             $item->expiresAfter(3600);
+            var_dump('miss');
             return $this->promotionRepository->getPromotionByProduct($product);
         });
 

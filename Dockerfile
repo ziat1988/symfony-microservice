@@ -43,6 +43,9 @@ RUN apk add --no-cache \
 		file \
 		gettext \
 		git \
+    	pcre-dev $PHPIZE_DEPS \
+      	&& pecl install redis \
+        && docker-php-ext-enable redis.so \
 	;
 
 RUN set -eux; \

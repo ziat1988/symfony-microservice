@@ -23,6 +23,10 @@ services:
       MERCURE_URL: ${CADDY_MERCURE_URL:-http://caddy/.well-known/mercure}
       MERCURE_PUBLIC_URL: https://${SERVER_NAME:-localhost}/.well-known/mercure
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      - redis
 
   caddy:
     build:
@@ -70,11 +74,29 @@ services:
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
       # - ./docker/db/data:/var/lib/postgresql/data:rw
 ###< doctrine/doctrine-bundle ###
-
+  redis:
+    container_name: redis
+    image: redis:5-alpine
+    volumes:
+      - redis_data:/data
+      
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      REDIS_HOSTS: redis:${REDIS_PORT}
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis 
+      
 volumes:
   php_socket:
   caddy_data:
   caddy_config:
+  redis_data:  
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
 
