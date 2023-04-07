@@ -3,19 +3,15 @@
 namespace App\Tests\Controller;
 
 use App\Cache\PromotionByProductCache;
-use App\EventListener\ProductChangePromotionNotifier;
 use App\Tests\ApplicationTestCase;
 
-use Symfony\Component\Cache\Adapter\RedisAdapter;
-use Symfony\Component\Cache\Adapter\TagAwareAdapter;
-
+use App\Utils\RedisUtils;
 class LowestPriceControllerTest extends ApplicationTestCase
 {
-    const ID_PRODUCT = 1;
     public function testRoutingProduct(): void
     {
 
-        $uri = sprintf("/products/%d/lowest-price",self::ID_PRODUCT);
+        $uri = sprintf("/products/%d/lowest-price",RedisUtils::ID_PRODUCT_TEST);
 
         $crawler = $this->client->jsonRequest('POST', $uri,
             [
@@ -35,11 +31,10 @@ class LowestPriceControllerTest extends ApplicationTestCase
      */
     public function testKeyAddToRedisSuccess()
     {
-        $redisHost = getenv('REDIS_HOST');
-        $redisPort = getenv('REDIS_PORT');
-        $client = RedisAdapter::createConnection(sprintf('redis://%s:%s', $redisHost, $redisPort));
-
-        $cache = new TagAwareAdapter(new RedisAdapter($client,namespace: 'my_app'));
-        self::assertTrue($cache->hasItem(PromotionByProductCache::KEY_NAME.self::ID_PRODUCT));
+        $client = RedisUtils::createConnectionRedis();
+        $cache = RedisUtils::getCache($client);
+        self::assertTrue($cache->hasItem(PromotionByProductCache::KEY_NAME.RedisUtils::ID_PRODUCT_TEST));
     }
+
+
 }

@@ -3,21 +3,16 @@ declare(strict_types=1);
 
 namespace App\Tests\unit;
 
+use App\Utils\RedisUtils;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Cache\Adapter\RedisAdapter;
 
 class RedisTest extends TestCase
 {
     public function testConnection()
     {
-        $redisHost = getenv('REDIS_HOST');
-        $redisPort = getenv('REDIS_PORT');
-        $client = RedisAdapter::createConnection(sprintf('redis://%s:%s', $redisHost, $redisPort));
-
+        // This is as same as Method Ping & pong with predis
+        $client = RedisUtils::createConnectionRedis();
         $result= $client->ping();
         $this->assertTrue($result);
-
-        // Method Ping & pong with predis
-
     }
 }

@@ -7,6 +7,7 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.2.4",
+        "ext-redis": "*",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/doctrine-bundle": "^2.8",
@@ -78,5 +79,6 @@
         "symfony/css-selector": "6.2.*",
         "symfony/maker-bundle": "^1.48",
         "symfony/phpunit-bridge": "^6.2"
+
     }
 }
