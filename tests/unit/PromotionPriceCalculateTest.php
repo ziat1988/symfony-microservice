@@ -6,9 +6,9 @@ namespace App\Tests\unit;
 use App\DTO\LowestPriceEnquiry;
 use App\Entity\Promotion;
 use App\FilterPrice\PromotionVariant\EvenItemsSale;
-use App\Tests\ServiceTestCase;
+use App\Tests\ApplicationTestCase;
 
-class PromotionPriceCalculateTest extends ServiceTestCase
+class PromotionPriceCalculateTest extends ApplicationTestCase
 {
     /**
      * @dataProvider ProvideEnquiry

@@ -6,9 +6,9 @@ use App\DTO\LowestPriceEnquiry;
 use App\Entity\Product;
 use App\Entity\Promotion;
 use App\FilterPrice\LowestPriceFilter;
-use App\Tests\ServiceTestCase;
+use App\Tests\ApplicationTestCase;
 
-class LowestPriceFilterTest extends ServiceTestCase
+class LowestPriceFilterTest extends ApplicationTestCase
 {
     /**
      * @dataProvider provideJsonData

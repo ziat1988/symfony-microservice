@@ -63,7 +63,6 @@ class ProductsController extends AbstractController
 
         $modifiedEnquiry = $this->lowestPriceFilter->apply($lowestPriceEnquiry,$promotions);
 
-
         return $this->json(data:$modifiedEnquiry,status:Response::HTTP_OK,context: [AbstractNormalizer::ATTRIBUTES=>
             [
                 'quantity',

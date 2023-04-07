@@ -8,10 +8,15 @@ use App\Repository\PromotionRepository;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
-readonly class PromotionByProductCache
+class PromotionByProductCache
 {
-    public function __construct(private CacheInterface $cache, private PromotionRepository $promotionRepository)
+    const TAG_NAME_CACHE = "tag_product_";
+    const KEY_NAME = "product-";
+
+
+    public function __construct(private TagAwareCacheInterface $cache, private PromotionRepository $promotionRepository)
     {}
 
     /**
@@ -21,9 +26,9 @@ readonly class PromotionByProductCache
      */
     public function findPromotionForProduct(Product $product) : ?array
     {
-        $key = sprintf("promotion-by-product-%d",$product->getId());
-        return $this->cache->get($key,function (ItemInterface $item)  use ($product){
+        return $this->cache->get(self::KEY_NAME.$product->getId(),function (ItemInterface $item)  use ($product){
             $item->expiresAfter(3600);
+            //$item->tag('tag-1');
             var_dump('miss');
             return $this->promotionRepository->getPromotionByProduct($product);
         });
