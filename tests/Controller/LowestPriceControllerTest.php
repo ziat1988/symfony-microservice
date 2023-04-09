@@ -4,8 +4,8 @@ namespace App\Tests\Controller;
 
 use App\Cache\PromotionByProductCache;
 use App\Tests\ApplicationTestCase;
-
 use App\Utils\RedisUtils;
+
 class LowestPriceControllerTest extends ApplicationTestCase
 {
     public function testRoutingProduct(): void
