@@ -17,7 +17,7 @@ class AppFixtures extends Fixture
 
         // promotion
         $promotions = PromotionFactory::createSequence([
-            ['name'=>'Black Friday half price sale','type'=>'date_range_multiplier','adjustment'=>0.5,'criteria'=>['from'=>'2023-11-11','to'=>'2023-30-11']] ,
+            ['name'=>'Black Friday half price sale','type'=>'date_range_multiplier','adjustment'=>0.5,'criteria'=>['from'=>'2023-11-11','to'=>'2023-11-30']] ,
             ['name'=>'Voucher OU812','type'=>'fixed_price_voucher','adjustment'=>100,'criteria'=>['code'=>'OU812']] ,
             ['name'=>'Buy One Get Second Half Off','type'=>'even_items_multiplier','adjustment'=>0.5] ,
         ]);

@@ -7,11 +7,15 @@ use App\Factory\ProductFactory;
 
 use App\Tests\ApplicationTestCase;
 use App\Utils\RedisUtils;
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\Cache\Adapter\RedisAdapter;
 
 class LowestPriceControllerTest extends ApplicationTestCase
 {
 
-    public static int $ID_PRODUCT;
+    private static int $ID_PRODUCT;
+
+    private static \Redis $redisClient;
 
     /**
      * @dataProvider numberOfTestRun
@@ -52,10 +56,24 @@ class LowestPriceControllerTest extends ApplicationTestCase
      */
     public function testKeyAddToRedisSuccess()
     {
-        $client = RedisUtils::createConnectionRedis();
-        $cache = RedisUtils::getCache($client);
+        self::$redisClient = RedisUtils::createConnectionRedis();
+        $cache = RedisUtils::getCache(self::$redisClient);
         self::assertTrue($cache->hasItem(PromotionByProductCache::KEY_NAME.self::$ID_PRODUCT));
     }
 
 
+    /**
+     * @throws \RedisException
+     */
+    public static function tearDownAfterClass(): void
+    {
+        //clean up all key redis
+        $redisAdapter = self::$redisClient;
+        $keys = $redisAdapter->keys('my_app:*');
+
+
+       $redisAdapter->del($keys);
+       // $cache->deleteItems()
+
+    }
 }
