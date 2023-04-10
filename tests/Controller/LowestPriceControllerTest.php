@@ -4,11 +4,8 @@ namespace App\Tests\Controller;
 
 use App\Cache\PromotionByProductCache;
 use App\Factory\ProductFactory;
-
 use App\Tests\ApplicationTestCase;
 use App\Utils\RedisUtils;
-use Psr\Cache\InvalidArgumentException;
-use Symfony\Component\Cache\Adapter\RedisAdapter;
 
 class LowestPriceControllerTest extends ApplicationTestCase
 {
@@ -71,9 +68,6 @@ class LowestPriceControllerTest extends ApplicationTestCase
         $redisAdapter = self::$redisClient;
         $keys = $redisAdapter->keys('my_app:*');
 
-
-       $redisAdapter->del($keys);
-       // $cache->deleteItems()
-
+        $redisAdapter->del($keys);
     }
 }
