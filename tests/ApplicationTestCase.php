@@ -8,6 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ApplicationTestCase extends WebTestCase
 {
+
     protected ContainerInterface $container;
     protected KernelBrowser $client;
 
@@ -17,4 +18,5 @@ class ApplicationTestCase extends WebTestCase
         $this->client = static::createClient();
         $this->container = $this->client->getContainer();
     }
+
 }

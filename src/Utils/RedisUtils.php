@@ -8,7 +8,6 @@ use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 
 class RedisUtils
 {
-    const ID_PRODUCT_TEST = 1;
     public static function createConnectionRedis(): \Redis
     {
         $redisHost = getenv('REDIS_HOST');
@@ -22,6 +21,5 @@ class RedisUtils
     {
         return new TagAwareAdapter(new RedisAdapter($client,namespace: 'my_app'));
     }
-
 
 }

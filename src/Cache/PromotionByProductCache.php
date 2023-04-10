@@ -6,7 +6,6 @@ use App\Entity\Product;
 use App\Entity\Promotion;
 use App\Repository\PromotionRepository;
 use Psr\Cache\InvalidArgumentException;
-use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
@@ -28,8 +27,6 @@ class PromotionByProductCache
     {
         return $this->cache->get(self::KEY_NAME.$product->getId(),function (ItemInterface $item)  use ($product){
             $item->expiresAfter(3600);
-            //$item->tag('tag-1');
-            var_dump('miss');
             return $this->promotionRepository->getPromotionByProduct($product);
         });
 

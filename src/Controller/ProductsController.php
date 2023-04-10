@@ -39,6 +39,7 @@ class ProductsController extends AbstractController
     public function lowestPrice(Request $request,int $id): JsonResponse
     {
         $product = $this->productRepository->find($id);
+
         if(!$product){
             throw new BadRequestHttpException('Not found product',null,400);
         }

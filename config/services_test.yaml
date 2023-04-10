@@ -1,0 +1,5 @@
+services:
+    App\Cache\PromotionByProductCache:
+        public: true
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true

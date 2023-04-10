@@ -5,13 +5,12 @@ namespace App\Tests\Functional;
 
 use App\Cache\PromotionByProductCache;
 use App\Entity\Product;
-use App\Entity\ProductPromotion;
-use App\Entity\Promotion;
+use App\Factory\ProductFactory;
+use App\Factory\ProductPromotionFactory;
+use App\Factory\PromotionFactory;
 use App\Tests\FunctionalTestCase;
-
 use App\Utils\RedisUtils;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\InvalidArgumentException;
 
 
@@ -19,31 +18,47 @@ class ProductPromotionChangeEventTest extends FunctionalTestCase
 {
 
     /**
-     * @throws OptimisticLockException
-     * @throws ORMException|InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function testNewProductPromotionInsertThenKeyRedisDeleted()
+    public function testRedisKeyDeleteByPostPersistHandler()
     {
-        $product = $this->entityManager->getRepository(Product::class)->find(1);
+        /** @var Product $product */
+        $product= ProductFactory::randomOrCreate()->object();
 
-        $promotion = $this->entityManager->getRepository(Promotion::class)->find(3);
+        //writing a key to redis
+       /** @var PromotionByProductCache $serviceProductCache */
+       $serviceProductCache = $this->container->get(PromotionByProductCache::class);
+       $serviceProductCache->findPromotionForProduct($product);
 
-        $this->entityManager->persist($product);
-        $this->entityManager->persist($promotion);
 
-        $pp = new ProductPromotion();
-        $pp->setProduct($product);
-        $pp->setPromotion($promotion);
-
-        $this->entityManager->persist($pp);
-        $this->entityManager->flush();
+        // add new ProductPromotion
+        ProductPromotionFactory::createOne([
+            'product'=>$product,
+            'promotion'=>PromotionFactory::random()
+        ]);
 
 
         // event trigger & key must be deleted
-
         $client = RedisUtils::createConnectionRedis();
         $cache = RedisUtils::getCache($client);
-        self::assertFalse($cache->hasItem(PromotionByProductCache::KEY_NAME.RedisUtils::ID_PRODUCT_TEST));
+        self::assertFalse($cache->hasItem(PromotionByProductCache::KEY_NAME.$product->getId()));
+
+    }
+    public function testMockingPersistProduct()
+    {
+        //$product = new Product();
+        // $product->setPrice("55.5");
+
+        $product = ProductFactory::new();
+
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager->expects($this->once())
+            ->method('persist')
+            ->with($this->equalTo($product))
+        ;
+
+        // persist the product using the mocked entity manager
+        $entityManager->persist($product);
     }
 
 }

@@ -3,15 +3,27 @@
 namespace App\Tests\Controller;
 
 use App\Cache\PromotionByProductCache;
+use App\Factory\ProductFactory;
+
 use App\Tests\ApplicationTestCase;
 use App\Utils\RedisUtils;
 
 class LowestPriceControllerTest extends ApplicationTestCase
 {
+
+    public static int $ID_PRODUCT;
+
+    /**
+     * @dataProvider numberOfTestRun
+     */
     public function testRoutingProduct(): void
     {
+        $product = ProductFactory::randomOrCreate();
 
-        $uri = sprintf("/products/%d/lowest-price",RedisUtils::ID_PRODUCT_TEST);
+        self::$ID_PRODUCT = $product->getId();
+
+
+        $uri = sprintf("/products/%d/lowest-price",$product->getId());
 
         $crawler = $this->client->jsonRequest('POST', $uri,
             [
@@ -26,6 +38,15 @@ class LowestPriceControllerTest extends ApplicationTestCase
 
     }
 
+
+    public function numberOfTestRun() : \Generator
+    {
+        $time = 3;
+        for($i = 1; $i<= $time; $i++ ){
+            yield[];
+        }
+    }
+
     /**
      * @depends testRoutingProduct
      */
@@ -33,7 +54,7 @@ class LowestPriceControllerTest extends ApplicationTestCase
     {
         $client = RedisUtils::createConnectionRedis();
         $cache = RedisUtils::getCache($client);
-        self::assertTrue($cache->hasItem(PromotionByProductCache::KEY_NAME.RedisUtils::ID_PRODUCT_TEST));
+        self::assertTrue($cache->hasItem(PromotionByProductCache::KEY_NAME.self::$ID_PRODUCT));
     }
 
 
