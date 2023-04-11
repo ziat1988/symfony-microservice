@@ -59,7 +59,7 @@ class PromotionPriceCalculateTest extends TestCase
         self::assertSame($priceExpected,$priceCalculated);
     }
 
-    public function ProvideDataFixedPrice()
+    public function ProvideDataFixedPrice(): \Generator
     {
         $enquiry = new LowestPriceEnquiry();
         $quantity = 5;
