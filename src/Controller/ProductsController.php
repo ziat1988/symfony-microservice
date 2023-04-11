@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Cache\PromotionByProductCache;
 use App\DTO\LowestPriceEnquiry;
+use App\Event\DeserializerPriceEnquiryEvent;
 use App\FilterPrice\LowestPriceFilter;
 use App\Repository\ProductRepository;
+use App\Serializer\PriceEnquiryDeserializerService;
 use Exception;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,6 +22,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ProductsController extends AbstractController
 {
@@ -27,7 +30,9 @@ class ProductsController extends AbstractController
     public function __construct(
         private readonly ProductRepository $productRepository,
         private readonly LowestPriceFilter $lowestPriceFilter,
-        private readonly PromotionByProductCache $cachePromotion
+        private readonly PromotionByProductCache $cachePromotion,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly PriceEnquiryDeserializerService $priceEnquiryDeserializerService
     ){}
 
 
@@ -41,27 +46,16 @@ class ProductsController extends AbstractController
         $product = $this->productRepository->find($id);
 
         if(!$product){
-            throw new BadRequestHttpException('Not found product',null,400);
+            throw new BadRequestHttpException('Not found product !',null,400);
         }
 
         $jsonBody = $request->getContent();
+        $lowestPriceEnquiry = $this->priceEnquiryDeserializerService->deserializerDTO($jsonBody,$product);
 
-        $encoders = [new JsonEncoder()];
-
-        $normalizers = [new DateTimeNormalizer(), new GetSetMethodNormalizer(propertyTypeExtractor: new ReflectionExtractor())];
-        $serializer = new Serializer($normalizers, $encoders);
-
-        /** @var LowestPriceEnquiry $lowestPriceEnquiry */
-        $lowestPriceEnquiry = $serializer->deserialize(
-            $jsonBody,
-            LowestPriceEnquiry::class,
-            'json');
-
-
-        $lowestPriceEnquiry->setProduct($product); //TODO: maybe let deserialize do his job?
+        $event = new DeserializerPriceEnquiryEvent($lowestPriceEnquiry);
+        $this->eventDispatcher->dispatch($event,DeserializerPriceEnquiryEvent::NAME);
 
         $promotions = $this->cachePromotion->findPromotionForProduct($product);
-
         $modifiedEnquiry = $this->lowestPriceFilter->apply($lowestPriceEnquiry,$promotions);
 
         return $this->json(data:$modifiedEnquiry,status:Response::HTTP_OK,context: [AbstractNormalizer::ATTRIBUTES=>

@@ -2,12 +2,15 @@
 
 namespace App\DTO;
 use App\Entity\Product;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class LowestPriceEnquiry
 {
 
     private Product $product;
 
+    #[Assert\NotBlank]
+    #[Assert\Positive(message: 'The quantity can not less 1!')]
     private int $quantity = 1;
     private ?string $requestLocation;
     private ?string $voucherCode;

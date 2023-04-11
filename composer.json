@@ -7,9 +7,9 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.2.4",
-        "ext-redis": "*",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ext-redis": "*",
         "doctrine/doctrine-bundle": "^2.8",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.14",
@@ -22,6 +22,7 @@
         "symfony/property-access": "6.2.*",
         "symfony/runtime": "6.2.*",
         "symfony/serializer": "6.2.*",
+        "symfony/validator": "6.2.*",
         "symfony/yaml": "6.2.*"
     },
     "config": {
