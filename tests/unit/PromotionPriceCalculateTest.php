@@ -8,12 +8,11 @@ use App\Entity\Promotion;
 use App\FilterPrice\PromotionVariant\DateRangeSale;
 use App\FilterPrice\PromotionVariant\EvenItemsSale;
 use App\FilterPrice\PromotionVariant\FixedPriceVoucher;
-use App\Tests\ApplicationTestCase;
-use function Zenstruck\Foundry\anonymous;
+use PHPUnit\Framework\TestCase;
 
-class PromotionPriceCalculateTest extends ApplicationTestCase
+
+class PromotionPriceCalculateTest extends TestCase
 {
-
 
     /**
      * @dataProvider ProvideEnquiryEven

@@ -47,7 +47,7 @@ final class ProductFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'price' => self::faker()->randomFloat(5,10,500)
+            'price' => self::faker()->randomFloat(2,120,500)
         ];
     }
 

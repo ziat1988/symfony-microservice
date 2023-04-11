@@ -36,6 +36,8 @@ class LowestPriceFilter
 
         }
 
+        $lowestPriceEnquiry->setTotalOriginalPrice($priceTotal);
+
         return $lowestPriceEnquiry;
 
     }

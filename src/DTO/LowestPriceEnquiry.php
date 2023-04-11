@@ -6,48 +6,49 @@ use App\Entity\Product;
 class LowestPriceEnquiry
 {
 
-    private ?Product $product;
+    private Product $product;
 
-    private ?int $quantity = 1;
+    private int $quantity = 1;
     private ?string $requestLocation;
     private ?string $voucherCode;
     private ?string $requestDate;
-    private ?float $originalPrice;
+    private float $originalPrice;
     private ?float $discountedPrice =null;
+    private float $totalOriginalPrice;
     private ?int $promotionId;
     private ?string $promotionName;
 
     /**
-     * @return Product|null
+     * @return Product
      */
-    public function getProduct(): ?Product
+    public function getProduct(): Product
     {
         return $this->product;
     }
 
     /**
-     * @param Product|null $product
+     * @param Product $product
      * @return LowestPriceEnquiry
      */
-    public function setProduct(?Product $product): LowestPriceEnquiry
+    public function setProduct(Product $product): LowestPriceEnquiry
     {
         $this->product = $product;
         return $this;
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getQuantity(): ?int
+    public function getQuantity(): int
     {
         return $this->quantity;
     }
 
     /**
-     * @param int|null $quantity
+     * @param int $quantity
      * @return LowestPriceEnquiry
      */
-    public function setQuantity(?int $quantity): LowestPriceEnquiry
+    public function setQuantity(int $quantity): LowestPriceEnquiry
     {
         $this->quantity = $quantity;
         return $this;
@@ -108,18 +109,18 @@ class LowestPriceEnquiry
     }
 
     /**
-     * @return float|null
+     * @return float
      */
-    public function getOriginalPrice(): ?float
+    public function getOriginalPrice(): float
     {
         return $this->originalPrice;
     }
 
     /**
-     * @param float|null $originalPrice
+     * @param float $originalPrice
      * @return LowestPriceEnquiry
      */
-    public function setOriginalPrice(?float $originalPrice): LowestPriceEnquiry
+    public function setOriginalPrice(float $originalPrice): LowestPriceEnquiry
     {
         $this->originalPrice = $originalPrice;
         return $this;
@@ -140,6 +141,24 @@ class LowestPriceEnquiry
     public function setDiscountedPrice(?float $discountedPrice): LowestPriceEnquiry
     {
         $this->discountedPrice = $discountedPrice;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTotalOriginalPrice(): float
+    {
+        return $this->totalOriginalPrice;
+    }
+
+    /**
+     * @param float $totalOriginalPrice
+     * @return LowestPriceEnquiry
+     */
+    public function setTotalOriginalPrice(float $totalOriginalPrice): LowestPriceEnquiry
+    {
+        $this->totalOriginalPrice = $totalOriginalPrice;
         return $this;
     }
 

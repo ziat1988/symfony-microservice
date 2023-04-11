@@ -29,17 +29,13 @@ class AppFixtures extends Fixture
             ProductPromotionFactory::new()->create(['promotion' => $promotion,'product'=>$product]);
         }
 
-
-
-        //ensure a product appear at least three times
-        /*
-        ProductPromotionFactory::createMany(3,function(){
+        // add some more random product in ProductPromotion
+        ProductPromotionFactory::createMany(3, function (){
             return [
-                'product'=>ProductFactory::first(),
+                'product'=>ProductFactory::random(),
                 'promotion'=>PromotionFactory::random()
             ];
         });
-        */
 
         $manager->flush();
 

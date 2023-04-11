@@ -1,31 +1,82 @@
 <?php
 
 namespace App\Tests\unit;
-
 use App\DTO\LowestPriceEnquiry;
 use App\Entity\Product;
 use App\Entity\Promotion;
+use App\Factory\ProductFactory;
 use App\FilterPrice\LowestPriceFilter;
-use App\Tests\ApplicationTestCase;
+use PHPUnit\Framework\TestCase;
+use Zenstruck\Foundry\Test\Factories;
 
-class LowestPriceFilterTest extends ApplicationTestCase
+class LowestPriceFilterTest extends TestCase
 {
+    use Factories;
+
     /**
      * @dataProvider provideJsonData
      */
     public function testLowestPriceAppliedCorrect(LowestPriceEnquiry $enquiry, Product $product, float|null $priceDiscount): void
     {
 
-        /** @var LowestPriceFilter $lowestPriceFilterService */
-        $lowestPriceFilterService = $this->container->get(LowestPriceFilter::class);
-        $promotions = $this->providePromotions();
+        $lowestPriceFilterService = new LowestPriceFilter();
+        $promotions = $this->getPromotions(); // many promotion applied to product
 
-
-        $priceFiltered = $lowestPriceFilterService->apply($enquiry,$promotions); // nope
+        $priceFiltered = $lowestPriceFilterService->apply($enquiry,$promotions);
 
         self::assertSame($priceFiltered->getDiscountedPrice(),$priceDiscount);
         self::assertSame($priceFiltered->getOriginalPrice(),floatval($product->getPrice()));
 
+    }
+
+
+    /**
+     * @param array<int,Promotion> $promotions
+     * @return void
+     * @dataProvider providePromotions
+     */
+    public function testProductHasPromoNotValid(array $promotions) :void
+    {
+        $product = ProductFactory::randomOrCreate()->object();
+        $enquiry = new LowestPriceEnquiry();
+        $enquiry
+            ->setProduct($product)
+            ->setQuantity(4)
+            ->setRequestDate('2023-12-01')
+            ->setVoucherCode('ABC')
+
+        ;
+
+        $lowestPriceFilterService = new LowestPriceFilter();
+        $priceProduct = floatval($product->getPrice());
+
+
+        $priceFiltered = $lowestPriceFilterService->apply($enquiry,$promotions);
+
+        self::assertSame( $priceProduct, $priceFiltered->getOriginalPrice());
+        self::assertSame( $priceProduct * $enquiry->getQuantity(), $priceFiltered->getTotalOriginalPrice());
+        self::assertSame( null, $priceFiltered->getDiscountedPrice());
+    }
+
+
+
+    public function providePromotions(): \Generator
+    {
+        $promotionOne = new Promotion();
+        $promotionOne->setName('Black Friday half price sale');
+        $promotionOne->setAdjustment(0.5);
+        $promotionOne->setCriteria(["from" => "2023-11-25", "to" => "2023-11-28"]);
+        $promotionOne->setType('date_range_multiplier');
+
+        yield 'half price date range'=> [[$promotionOne]];
+
+        $promotionTwo = new Promotion();
+        $promotionTwo->setName('Voucher');
+        $promotionTwo->setAdjustment(100);
+        $promotionTwo->setCriteria(["code" => "OU812"]);
+        $promotionTwo->setType('fixed_price_voucher');
+
+        yield '2 promotions with product'=> [[$promotionOne,$promotionTwo]];
     }
 
     public function provideJsonData(): \Generator
@@ -62,7 +113,7 @@ class LowestPriceFilterTest extends ApplicationTestCase
         yield 'no_promotion'=>[$enquiry,$product,null];
     }
 
-    private function providePromotions(): array
+    private function getPromotions(): array
     {
         $promotionOne = new Promotion();
         $promotionOne->setName('Black Friday half price sale');
