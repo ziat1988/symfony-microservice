@@ -10,13 +10,15 @@ class LowestPriceEnquiry
     private Product $product;
 
     #[Assert\NotBlank]
-    #[Assert\Positive(message: 'The quantity can not less 1!')]
+    #[Assert\Positive(message: 'The quantity can not less than 1!')]
     private int $quantity = 1;
     private ?string $requestLocation;
     private ?string $voucherCode;
+
+    #[Assert\DateTime(format: 'Y-m-d',message: 'Request date not valid!' )]
     private ?string $requestDate;
     private float $originalPrice;
-    private ?float $discountedPrice =null;
+    private ?float $discountedPrice = null;
     private float $totalOriginalPrice;
     private ?int $promotionId;
     private ?string $promotionName;

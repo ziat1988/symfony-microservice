@@ -26,13 +26,9 @@ class DeserializerPriceEnquirySubscriber implements EventSubscriberInterface
     {
         // call validation here
         $enquiry =  $event->getEnquiry();
-
         $errors = $this->validator->validate($enquiry);
         if (count($errors) > 0) {
             throw new InvalidArgumentException('validation failed');
-           // $validationExceptionData = new ValidationExceptionData(422, 'ConstraintViolationList', $errors);
-
-           // throw new ServiceException($validationExceptionData);
         }
 
     }
