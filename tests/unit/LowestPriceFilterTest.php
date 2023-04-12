@@ -35,11 +35,11 @@ class LowestPriceFilterTest extends TestCase
         ;
 
         $lowestPriceFilterService = new LowestPriceFilter();
-        $priceProduct = floatval($product->getPrice());
+        $priceProduct = (float)($product->getPrice());
         $priceFiltered = $lowestPriceFilterService->apply($enquiry,$promotions);
 
 
-        self::assertSame(floatval(250),$priceFiltered->getDiscountedPrice());
+        self::assertSame(250.0,$priceFiltered->getDiscountedPrice());
         self::assertSame($priceProduct * $enquiry->getQuantity(), $priceFiltered->getTotalOriginalPrice());
         self::assertSame($priceProduct, $priceFiltered->getOriginalPrice());
         self::assertLessThan($priceFiltered->getTotalOriginalPrice(),$priceFiltered->getDiscountedPrice(),'total discount must less than total original price' );
@@ -68,7 +68,7 @@ class LowestPriceFilterTest extends TestCase
         ;
 
         $lowestPriceFilterService = new LowestPriceFilter();
-        $priceProduct = floatval($product->getPrice());
+        $priceProduct = (float)($product->getPrice());
         $priceFiltered = $lowestPriceFilterService->apply($enquiry,$promotions);
 
 
@@ -98,7 +98,7 @@ class LowestPriceFilterTest extends TestCase
         ;
 
         $lowestPriceFilterService = new LowestPriceFilter();
-        $priceProduct = floatval($product->getPrice());
+        $priceProduct = (float)($product->getPrice());
         $priceFiltered = $lowestPriceFilterService->apply($enquiry,$promotions);
 
 
@@ -128,7 +128,7 @@ class LowestPriceFilterTest extends TestCase
         ;
 
         $lowestPriceFilterService = new LowestPriceFilter();
-        $priceProduct = floatval($product->getPrice());
+        $priceProduct = (float)($product->getPrice());
 
 
         $priceFiltered = $lowestPriceFilterService->apply($enquiry,$promotions);

@@ -17,7 +17,7 @@ class LowestPriceFilter
     public function apply(LowestPriceEnquiry $lowestPriceEnquiry, array $promotions): LowestPriceEnquiry
     {
         $product = $lowestPriceEnquiry->getProduct();
-        $priceOriginal = floatval($product->getPrice());
+        $priceOriginal = (float)($product->getPrice());
         $quantity = $lowestPriceEnquiry->getQuantity();
         $priceTotal = $priceOriginal * $quantity;
 

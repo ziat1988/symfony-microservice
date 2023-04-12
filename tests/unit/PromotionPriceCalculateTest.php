@@ -94,11 +94,11 @@ class PromotionPriceCalculateTest extends TestCase
 
     public function ProvideEnquiryEven(): \Generator
     {
-        $price = floatval(100);
-        yield [$price,5,floatval(400)];
-        yield [$price,3,floatval(250)];
-        yield[$price,2,floatval(150) ];
-        yield[$price,1,floatval(100) ];
+        $price = 100.0;
+        yield [$price,5,400.0];
+        yield [$price,3,250.0];
+        yield[$price,2,150.0];
+        yield[$price,1,100.0 ];
 
     }
 
