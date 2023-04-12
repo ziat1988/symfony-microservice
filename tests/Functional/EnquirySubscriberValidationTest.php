@@ -6,6 +6,7 @@ namespace App\Tests\Functional;
 use App\DTO\LowestPriceEnquiry;
 use App\Event\DeserializerPriceEnquiryEvent;
 use App\EventSubscriber\DeserializerPriceEnquirySubscriber;
+use App\Exception\EnquiryPriceViolationException;
 use App\Tests\ApplicationTestCase;
 
 class EnquirySubscriberValidationTest extends ApplicationTestCase
@@ -20,11 +21,10 @@ class EnquirySubscriberValidationTest extends ApplicationTestCase
         $serviceSubscribe = $this->container->get( DeserializerPriceEnquirySubscriber::class);
         $event = new DeserializerPriceEnquiryEvent($enquiry);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(EnquiryPriceViolationException::class);
         $serviceSubscribe->validateDto($event);
 
     }
-
 
     public function testEnquiryNotValidWithDate()
     {
@@ -37,7 +37,7 @@ class EnquirySubscriberValidationTest extends ApplicationTestCase
         $serviceSubscribe = $this->container->get( DeserializerPriceEnquirySubscriber::class);
         $event = new DeserializerPriceEnquiryEvent($enquiry);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(EnquiryPriceViolationException::class);
         $serviceSubscribe->validateDto($event);
 
     }
