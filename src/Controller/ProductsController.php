@@ -46,7 +46,7 @@ class ProductsController extends AbstractController
         $product = $this->productRepository->find($id);
 
         if(!$product){
-            throw new BadRequestHttpException('Not found product !',null,400);
+            throw new BadRequestHttpException('Not found product !',null,Response::HTTP_BAD_REQUEST);
         }
 
         $jsonBody = $request->getContent();
